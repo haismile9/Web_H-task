@@ -37,10 +37,12 @@ php artisan serve
 
 ### Frontend (React)
 
-
+<pre> 
+  ```bash
 cd frontend
 npm install
 npm run dev
+ </pre>
 ⚠️ Lưu ý: Cần cấu hình .env ở cả backend và frontend để kết nối API chính xác.
 
 🚧 Tình trạng triển khai
