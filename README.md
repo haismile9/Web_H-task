@@ -31,12 +31,27 @@ H-Task là một ứng dụng web hỗ trợ quản lý dự án theo mô hình 
 ### Code được gửi qua email
 ![Code Email](./assets/MailCode.png)
 
+### Trang chính
+![Dashboard](./assets/Dashboard.png)
+
+
+###Chi tiết dự án
+![Chi tiết dự án](./assets/ProjectDetail)
+
+
 ### Bảng Kanban – Drag & Drop
 ![Kanban](./assets/Drap-DropStatus.png)
+
+### Modal - Thêm thành viên
+![Modaladdmember](./assets/Modaladdmember.png)
+
 
 ### Quản lý thành viên và nhiệm vụ
 ![Thành viên](./assets/MemberInProject.png)
 ![Tạo task](./assets/ModalCreateTask.png)
+
+### Công việc của tôi
+![Hiển thị công việc mình được gán](./assets/MyTask.png)
 
 
 ## ⚙️ Cài đặt & chạy thử
