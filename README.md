@@ -20,6 +20,21 @@ H-Task là một ứng dụng web hỗ trợ quản lý dự án theo mô hình 
 - [x] Giao diện trực quan, dễ sử dụng, tương thích nhiều thiết bị
 - [x] Hệ thống API RESTful tách biệt frontend và backend
 - [x] Test liên tục sau mỗi vòng phát triển (Sprint)
+## 🖼️ Giao diện dự án
+
+### Trang đăng ký
+![Register](./assets/Register.png)
+
+### Trang xác minh email
+![Verify Email](./assets/VerifyEmail.png)
+
+### Bảng Kanban – Drag & Drop
+![Kanban](./assets/Drap-DropStatus.png)
+
+### Quản lý thành viên và nhiệm vụ
+![Thành viên](./assets/MemberInProject.png)
+![Tạo task](./assets/ModalCreateTask.png)
+
 
 ## ⚙️ Cài đặt & chạy thử
 
