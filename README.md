@@ -36,7 +36,7 @@ H-Task là một ứng dụng web hỗ trợ quản lý dự án theo mô hình 
 
 
 ###Chi tiết dự án
-![Chi tiết dự án](./assets/ProjectDetail)
+![Chi tiết dự án](./assets/ProjectDetail.png)
 
 
 ### Bảng Kanban – Drag & Drop
