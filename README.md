@@ -24,7 +24,7 @@ H-Task là một ứng dụng web hỗ trợ quản lý dự án theo mô hình 
 ## ⚙️ Cài đặt & chạy thử
 
 ### Backend (Laravel)
-
+<pre> 
 ```bash
 cd backend
 composer install
@@ -32,12 +32,12 @@ cp .env.example .env
 php artisan key:generate
 php artisan migrate
 php artisan serve
-
+</pre>
 
 
 ### Frontend (React)
 
-```bash
+
 cd frontend
 npm install
 npm run dev
