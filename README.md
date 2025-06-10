@@ -43,6 +43,16 @@ cd frontend
 npm install
 npm run dev
  </pre>
+
+
+
+ ---
+
+## 🖼️ Giao diện dự án
+
+![Demo UI](./assets/dashboard.png)
+
+
 ⚠️ Lưu ý: Cần cấu hình .env ở cả backend và frontend để kết nối API chính xác.
 
 🚧 Tình trạng triển khai
