@@ -1,8 +1,5 @@
 ﻿# Web_H-task
 
-markdown
-Copy
-Edit
 # H-Task - Ứng dụng quản lý công việc nhóm
 
 H-Task là một ứng dụng web hỗ trợ quản lý dự án theo mô hình Kanban, được xây dựng bằng **ReactJS** (frontend), **Laravel** (backend) và **MySQL** (cơ sở dữ liệu). Dự án được triển khai qua nhiều Sprint theo phương pháp **Agile – Scrum** và đã hoàn thiện các chức năng cốt lõi cần thiết để vận hành trong môi trường thực tế.
