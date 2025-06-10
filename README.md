@@ -83,7 +83,7 @@ npm run dev
 
 ## 🖼️ Giao diện dự án
 
-![Demo UI](./assets/dashboard.png)
+![Demo UI](./assets/Dashboard.png)
 
 
 ⚠️ Lưu ý: Cần cấu hình .env ở cả backend và frontend để kết nối API chính xác.
