@@ -56,7 +56,6 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ projectId }) => {
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [newTaskDescription, setNewTaskDescription] = useState("");
   const [newTaskDeadline, setNewTaskDeadline] = useState("");
-  const [newTaskAssignedEmails, setNewTaskAssignedEmails] = useState("");
   const [assignedUsers, setAssignedUsers] = useState<User[]>([]);
 
   const [members, setMembers] = useState<User[]>([]);

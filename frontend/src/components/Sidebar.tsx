@@ -1,6 +1,13 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { AiOutlineDashboard, AiOutlineUser, AiOutlineLogout, AiOutlinePushpin } from 'react-icons/ai';
+import {
+  AiOutlineDashboard,
+  AiOutlineUser,
+  AiOutlineLogout,
+  AiOutlinePushpin,
+  AiOutlineSetting,
+  AiOutlineFolder
+} from 'react-icons/ai';
 import API from '../api/axios';
 
 const Sidebar: React.FC = () => {
@@ -19,23 +26,26 @@ const Sidebar: React.FC = () => {
     }
   };
 
-  const isActive = (path: string) => location.pathname.startsWith(path);
+  const isActive = (path: string) =>
+    location.pathname === path || location.pathname.startsWith(path + '/');
+
   const rawUser = localStorage.getItem('user');
   const user = rawUser ? JSON.parse(rawUser) : { name: 'Guest', role: 'guest' };
+  const firstLetter = user.name?.charAt(0)?.toUpperCase() || 'U';
 
   return (
-    <div className="menu p-4 w-64 min-h-full bg-base-200 text-base-content flex flex-col">
+    <div className="menu p-4 w-64 min-h-screen bg-base-200 text-base-content flex flex-col">
       {/* Logo + App Name */}
-      <div className="flex items-center mb-4">
+      <div className="flex items-center mb-6">
         <img src="/img/favicon.ico" alt="Logo" className="w-8 h-8 mr-2 rounded" />
         <span className="font-bold text-xl">- Task</span>
       </div>
 
-      {/* Avatar user + role */}
-      <div className="flex items-center mb-4 gap-2">
+      {/* User Avatar + Info */}
+      <div className="flex items-center mb-6 gap-2">
         <div className="avatar placeholder">
-          <div className="bg-neutral-focus text-neutral-content rounded-full w-10">
-            <span className="text-lg uppercase">{user.name.charAt(0)}</span>
+          <div className="bg-neutral-focus text-neutral-content rounded-full w-10 h-10 flex items-center justify-center">
+            <span className="text-lg">{firstLetter}</span>
           </div>
         </div>
         <div>
@@ -44,33 +54,61 @@ const Sidebar: React.FC = () => {
         </div>
       </div>
 
-      {/* Menu */}
+      {/* Navigation Menu */}
       <ul className="flex-1 space-y-2">
         <li>
-          <Link 
-            to="/dashboard" 
-            className={`flex items-center ${isActive('/dashboard') ? 'active font-bold' : ''}`}
+          <Link
+            to="/dashboard"
+            className={`flex items-center p-2 rounded hover:bg-base-300 transition ${
+              isActive('/dashboard') ? 'bg-base-300 font-bold' : ''
+            }`}
           >
-            <AiOutlineDashboard className="inline-block mr-2" />
+            <AiOutlineDashboard className="mr-2" />
             Dashboard
           </Link>
         </li>
         <li>
-          <Link 
-            to="/my-task"
-            className={`flex items-center ${isActive('/my-task') ? 'active font-bold' : ''}`}
+          <Link
+            to="/projects"
+            className={`flex items-center p-2 rounded hover:bg-base-300 transition ${
+              isActive('/projects') ? 'bg-base-300 font-bold' : ''
+            }`}
           >
-            <AiOutlinePushpin className="inline-block mr-2" />
+            <AiOutlineFolder className="mr-2" />
+            Dự Án
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="/my-task"
+            className={`flex items-center p-2 rounded hover:bg-base-300 transition ${
+              isActive('/my-task') ? 'bg-base-300 font-bold' : ''
+            }`}
+          >
+            <AiOutlinePushpin className="mr-2" />
             Công việc của tôi
           </Link>
         </li>
         <li>
-          <Link 
+          <Link
             to="/account"
-            className={`flex items-center ${isActive('/account') ? 'active font-bold' : ''}`}
+            className={`flex items-center p-2 rounded hover:bg-base-300 transition ${
+              isActive('/account') ? 'bg-base-300 font-bold' : ''
+            }`}
           >
-            <AiOutlineUser className="inline-block mr-2" />
+            <AiOutlineUser className="mr-2" />
             Tài Khoản
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="/settings"
+            className={`flex items-center p-2 rounded hover:bg-base-300 transition ${
+              isActive('/settings') ? 'bg-base-300 font-bold' : ''
+            }`}
+          >
+            <AiOutlineSetting className="mr-2" />
+            Cài Đặt
           </Link>
         </li>
       </ul>

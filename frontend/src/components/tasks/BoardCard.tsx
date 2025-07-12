@@ -1,6 +1,5 @@
 import React from "react";
 import dayjs from "dayjs";
-import classNames from "classnames";
 
 interface TaskProps {
   task: {

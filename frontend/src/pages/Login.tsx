@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useProjects } from "../api/project/useProjects";
 import API from "../api/axios";
 
 

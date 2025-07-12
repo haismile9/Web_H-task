@@ -1,118 +1,143 @@
-import { useState, useEffect } from "react";
-import { useProjects } from "../api/project/useProjects";
-import { accessControl } from "../api/utils/access";
-import BoardCard from "../components/BoardCard";
-import NewBoardCard from "../components/NewBoardCard";
-import CreateProjectModal from "../components/projects/CreateProjectModal";
-import { Navigate } from "react-router-dom";
+import React from 'react';
+import { 
+  FaProjectDiagram, 
+  FaCheckCircle, 
+  FaSpinner, 
+  FaExclamationTriangle,
+  FaChartBar
+} from 'react-icons/fa';
+import { useDashboard } from '../hooks/useDashboard';
+import SummaryCard from '../components/dashboard/SummaryCard';
+import ProjectCard from '../components/dashboard/ProjectCard';
+import LoadingSpinner from '../components/ui/LoadingSpinner';
 
-const Dashboard = () => {
-  const rawUser = localStorage.getItem("user");
-  const user = rawUser ? JSON.parse(rawUser) : null;
+const Dashboard: React.FC = () => {
+  const { data, loading, error, refetch } = useDashboard();
 
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [draggingId, setDraggingId] = useState<number | null>(null);
-  const [projectsState, setProjectsState] = useState<any[]>([]); // ← danh sách project cục bộ
+  if (loading) {
+    return <LoadingSpinner message="Loading dashboard..." fullScreen />;
+  }
 
-  const { projects, loading, error } = useProjects();
+  if (error) {
+    return (
+      <div className="min-h-screen bg-base-200 flex items-center justify-center">
+        <div className="alert alert-error max-w-md">
+          <FaExclamationTriangle />
+          <span>{error}</span>
+          <button 
+            className="btn btn-sm btn-outline ml-2" 
+            onClick={refetch}
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
-  // ⏬ Thêm đoạn này để đồng bộ dữ liệu từ useProjects sang state
-  useEffect(() => {
-    if (projects) {
-      setProjectsState(projects);
-    }
-  }, [projects]);
-
-  if (!user) return <Navigate to="/" />;
-
-  const permissions = accessControl(user.role);
-
-  const handleShowCreateModal = () => setShowCreateModal(true);
-  const handleCloseCreateModal = () => setShowCreateModal(false);
-
-  const handleDragStart = (id?: number) => {
-    if (id) setDraggingId(id);
-  };
-
-  const handleDeleteProject = async (id: number) => {
-    const confirmed = window.confirm("Bạn có chắc muốn xoá dự án này?");
-    if (!confirmed) return;
-
-    try {
-      await fetch(`/api/projects/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Requested-With": "XMLHttpRequest", // ✅ Rất quan trọng để Laravel hiểu đây là request từ frontend
-          Accept: "application/json",
-        },
-        credentials: "include", // ✅ bắt buộc với Sanctum
-      });
-
-      // ✅ Xoá khỏi projectState (không reload)
-      setProjectsState((prev) => prev.filter((p) => p.id !== id));
-    } catch (err) {
-      alert("Lỗi khi xoá dự án.");
-    }
-  };
-
-  const handleDropToTrash = () => {
-    if (draggingId !== null) {
-      handleDeleteProject(draggingId);
-      setDraggingId(null);
-    }
-  };
+  if (!data) {
+    return (
+      <div className="min-h-screen bg-base-200 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-lg">No data available</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-6 bg-base-200 min-h-screen">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-3xl font-bold">Xin chào, {user.name}</h1>
-          <p className="text-sm text-gray-600 mt-1">
-            Vai trò: <span className="badge badge-info">{user.role}</span>
-          </p>
+    <div className="min-h-screen bg-base-200 p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-base-content mb-2">
+            <FaChartBar className="inline mr-3 text-primary" />
+            Dashboard
+          </h1>
+          <p className="text-base-content/70">Overview of your projects and tasks</p>
         </div>
-        {permissions.canManageProjects && (
-          <button
-            className="btn btn-success btn-sm"
-            onClick={handleShowCreateModal}
-          >
-            + Tạo Dự Án
-          </button>
-        )}
-      </div>
 
-      <h2 className="text-2xl font-semibold mb-4">Danh sách dự án</h2>
-
-      {loading && <p>Đang tải dữ liệu...</p>}
-      {error && <p className="text-error">{error}</p>}
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        <NewBoardCard onClick={handleShowCreateModal} />
-        {projectsState.map((project) => (
-          <BoardCard
-            key={project.id}
-            id={project.id}
-            title={project.name}
-            description={project.description || "Không có mô tả"}
-            backgroundUrl={project.background_url}
-            draggable
-            onDragStart={handleDragStart}
+        {/* Summary Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <SummaryCard
+            title="Total Projects"
+            value={data.project_summary.total}
+            description={`${data.project_summary.done} completed, ${data.project_summary.doing} active`}
+            icon={<FaProjectDiagram />}
+            color="primary"
           />
-        ))}
-      </div>
+          
+          <SummaryCard
+            title="Tasks Completed"
+            value={data.task_summary.completed}
+            description={
+              data.task_summary.total > 0 
+                ? `${Math.round((data.task_summary.completed / data.task_summary.total) * 100)}% of total`
+                : 'No tasks yet'
+            }
+            icon={<FaCheckCircle />}
+            color="success"
+          />
+          
+          <SummaryCard
+            title="In Progress"
+            value={data.task_summary.in_progress}
+            description={`${data.task_summary.pending} pending tasks`}
+            icon={<FaSpinner />}
+            color="info"
+          />
+          
+          <SummaryCard
+            title="Overdue Tasks"
+            value={data.task_summary.overdue}
+            description={data.task_summary.overdue > 0 ? 'Requires attention' : 'All on track'}
+            icon={<FaExclamationTriangle />}
+            color="error"
+          />
+        </div>
 
-      {showCreateModal && (
-        <CreateProjectModal onClose={handleCloseCreateModal} />
-      )}
+        {/* Projects Progress */}
+        <div className="bg-base-100 rounded-lg shadow-lg p-6">
+          <h2 className="text-2xl font-bold text-base-content mb-6">
+            Project Progress
+          </h2>
+          
+          {data.projects.length === 0 ? (
+            <div className="text-center py-8">
+              <FaProjectDiagram className="text-6xl text-base-content/30 mx-auto mb-4" />
+              <p className="text-base-content/70 text-lg">No projects found</p>
+              <p className="text-base-content/50">Create your first project to get started</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {data.projects.map((project) => (
+                <ProjectCard key={project.id} project={project} />
+              ))}
+            </div>
+          )}
+        </div>
 
-      {/* 🗑 Trash zone */}
-      <div
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={handleDropToTrash}
-        className="fixed bottom-6 right-6 z-50 w-24 h-24 bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-red-700 transition cursor-pointer"
-      >
-        🗑
+        {/* Recent Activities (if available) */}
+        {data.activities && data.activities.length > 0 && (
+          <div className="bg-base-100 rounded-lg shadow-lg p-6 mt-8">
+            <h2 className="text-2xl font-bold text-base-content mb-6">
+              Recent Activities
+            </h2>
+            <div className="space-y-3">
+              {data.activities.map((activity, index) => (
+                <div key={index} className="flex items-center space-x-3 p-3 bg-base-200 rounded-lg">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  <div className="flex-1">
+                    <p className="text-sm text-base-content">{activity.content}</p>
+                    <p className="text-xs text-base-content/50">
+                      {new Date(activity.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

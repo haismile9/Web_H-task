@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "../api/axios";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";

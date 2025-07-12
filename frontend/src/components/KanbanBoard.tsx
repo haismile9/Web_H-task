@@ -63,8 +63,6 @@ const KanbanBoard: React.FC<TaskBoardProps> = ({ projectId }) => {
     const sourceCol = source.droppableId;
     const destCol = destination.droppableId;
 
-    const task = columns[sourceCol][source.index];
-
     if (sourceCol === destCol) {
       const reordered = Array.from(columns[sourceCol]);
       const [moved] = reordered.splice(source.index, 1);
