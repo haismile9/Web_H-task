@@ -18,5 +18,13 @@ export default defineConfig({
     rollupOptions: {
       input: 'src/main.tsx',
     },
+    // Production optimizations
+    minify: 'terser',
+    sourcemap: false,
+    chunkSizeWarningLimit: 1000,
+  },
+  // Production environment variables
+  define: {
+    __DEV__: false,
   },
 });

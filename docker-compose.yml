@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: htask_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: htask_db
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_USER: htask_user
+      MYSQL_PASSWORD: htask_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - htask_network
+
+  # Redis for caching and queues
+  redis:
+    image: redis:7-alpine
+    container_name: htask_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - htask_network
+
+  # Backend Laravel
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: htask_backend
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=htask_db
+      - DB_USERNAME=htask_user
+      - DB_PASSWORD=htask_password
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - QUEUE_CONNECTION=redis
+    depends_on:
+      - mysql
+      - redis
+    volumes:
+      - ./backend/storage:/var/www/storage
+      - ./backend/bootstrap/cache:/var/www/bootstrap/cache
+    networks:
+      - htask_network
+
+  # Frontend React
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: htask_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - htask_network
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: htask_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - htask_network
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  htask_network:
+    driver: bridge 
