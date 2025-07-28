@@ -5,9 +5,16 @@ import { RouterProvider } from 'react-router-dom'
 import router from './routers/router'
 
 const initSanctum = async () => {
-  await fetch('http://127.0.0.1:8000/sanctum/csrf-cookie', {
-    credentials: 'include',
-  });
+  const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+  const sanctumURL = baseURL.replace('/api', '/sanctum/csrf-cookie');
+  
+  try {
+    await fetch(sanctumURL, {
+      credentials: 'include',
+    });
+  } catch (error) {
+    console.warn('Failed to initialize sanctum:', error);
+  }
 };
 
 initSanctum().then(() => {
