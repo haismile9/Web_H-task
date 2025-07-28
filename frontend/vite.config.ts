@@ -16,22 +16,15 @@ export default defineConfig(({ mode }) => {
       },
     },
     build: {
-      outDir: isDevelopment ? '../backend/public/build' : 'dist',
+      outDir: 'dist',
       emptyOutDir: true,
-      manifest: !isDevelopment,
       rollupOptions: {
-        input: './index.html',
-        output: {
-          manualChunks: undefined,
-        }
+        input: 'index.html'
       },
-      // Production optimizations
       minify: 'terser',
       sourcemap: false,
       chunkSizeWarningLimit: 1000,
-      assetsDir: 'assets'
     },
-    // Production environment variables
     define: {
       __DEV__: isDevelopment,
     },

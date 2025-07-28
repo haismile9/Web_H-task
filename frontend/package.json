@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:vercel": "NODE_ENV=production vite build",
     "preview": "vite preview",
     "tw:init": "node ./node_modules/tailwindcss/cli.js init -p",
     "predeploy": "npm run build",
