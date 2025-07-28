@@ -6,6 +6,7 @@ export default defineConfig(({ mode }) => {
   
   return {
     plugins: [react()],
+    base: '/',
     server: {
       host: '127.0.0.1',
       port: 5173,
@@ -20,11 +21,15 @@ export default defineConfig(({ mode }) => {
       manifest: !isDevelopment,
       rollupOptions: {
         input: './index.html',
+        output: {
+          manualChunks: undefined,
+        }
       },
       // Production optimizations
       minify: 'terser',
       sourcemap: false,
       chunkSizeWarningLimit: 1000,
+      assetsDir: 'assets'
     },
     // Production environment variables
     define: {
