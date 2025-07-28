@@ -1,0 +1,13 @@
+node_modules
+.env
+.env.local
+.env.*.local
+*.log
+.DS_Store
+src
+public
+*.config.js
+*.config.ts
+tsconfig.json
+package.json
+package-lock.json

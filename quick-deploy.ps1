@@ -18,14 +18,26 @@ Write-Host "Installing dependencies..." -ForegroundColor Yellow
 npm install
 
 # Check if terser is installed
-$hasTerms = npm list terser 2>$null
-if (-not $hasTerms) {
-    Write-Host "Installing terser (required for build)..." -ForegroundColor Yellow
+$hasTermer = npm list terser 2>$null
+if (-not $hasTermer) {
+    Write-Host "Installing terser for build..." -ForegroundColor Yellow
     npm install terser --save-dev
 }
 
 Write-Host "Building project..." -ForegroundColor Yellow
+# Clear previous build
+if (Test-Path "dist") {
+    Remove-Item -Recurse -Force "dist"
+}
+$env:NODE_ENV = "production"
 npm run build
+
+# Verify build output
+if (-not (Test-Path "dist/index.html")) {
+    Write-Host "❌ Build failed - index.html not found" -ForegroundColor Red
+    exit 1
+}
+Write-Host "✅ Build successful - dist folder ready" -ForegroundColor Green
 
 Write-Host "Deploying to Vercel..." -ForegroundColor Yellow
 vercel --prod
