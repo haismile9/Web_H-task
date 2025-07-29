@@ -55,17 +55,17 @@ export default function ReportDashboard() {
         </div>
 
         <div className="bg-white rounded shadow p-4">
-          <p className="text-sm text-yellow-600">🕒 Đang chờ</p>
+          <p className="text-sm text-yellow-600"> Đang chờ</p>
           <p className="text-xl">{taskStats.pending}</p>
         </div>
 
         <div className="bg-white rounded shadow p-4">
-          <p className="text-sm text-blue-600">⚙️ Đang làm</p>
+          <p className="text-sm text-blue-600"> Đang làm</p>
           <p className="text-xl">{taskStats.in_progress}</p>
         </div>
 
         <div className="bg-white rounded shadow p-4">
-          <p className="text-sm text-green-600">✅ Hoàn thành</p>
+          <p className="text-sm text-green-600"> Hoàn thành</p>
           <p className="text-xl">{taskStats.done}</p>
         </div>
       </div>

@@ -68,9 +68,7 @@ const ProjectList = () => {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold">Xin chào, {user.name}</h1>
-          <p className="text-sm text-gray-600 mt-1">
-            Vai trò: <span className="badge badge-info">{user.role}</span>
-          </p>
+      
         </div>
         {permissions.canManageProjects && (
           <button

@@ -25,9 +25,9 @@ const statusStyle = {
 };
 
 const statusLabel = {
-  pending: '🕐 Chờ làm',
-  in_progress: '⚙️ Đang làm',
-  done: '✅ Hoàn thành',
+  pending: ' Chờ làm',
+  in_progress: 'Đang làm',
+  done: ' Hoàn thành',
 };
 
 const MyTasks: React.FC = () => {

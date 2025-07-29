@@ -42,7 +42,7 @@ const getDaisyStatusClass = (status?: string) => {
 const statusLabel = {
   pending: "🕐 Chờ làm",
   in_progress: "⚙️ Đang làm",
-  done: "✅ Hoàn thành",
+  done: " Hoàn thành",
 };
 
 const TaskBoard: React.FC<TaskBoardProps> = ({ projectId }) => {
@@ -474,9 +474,9 @@ const TaskBoard: React.FC<TaskBoardProps> = ({ projectId }) => {
                 })
               }
             >
-              <option value="pending">🕐 Chờ làm</option>
-              <option value="in_progress">⚙️ Đang làm</option>
-              <option value="done">✅ Hoàn thành</option>
+              <option value="pending"> Chờ làm</option>
+              <option value="in_progress"> Đang làm</option>
+              <option value="done">Hoàn thành</option>
             </select>
 
             {/* ✅ Checkbox gán thành viên */}
