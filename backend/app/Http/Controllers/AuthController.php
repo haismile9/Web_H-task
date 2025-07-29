@@ -16,6 +16,9 @@ class AuthController extends Controller
 {
     public function register(Request $request)
 {
+    // Debug: Log request data
+    \Log::info('Register request data: ', $request->all());
+    
     $request->validate([
         'name' => 'required|string|max:100',
         'email' => 'required|email|unique:users,email',

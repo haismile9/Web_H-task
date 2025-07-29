@@ -67,6 +67,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // 🧾 Admin: thêm user
     Route::post('/users', [AuthController::class, 'store']);
+    Route::get('/users/all', [AuthController::class, 'index']);
 
     // // 🔐 Kiểm tra email đã xác minh (tuỳ backend bạn dùng thêm logic bên trong)
     // Route::get('/verify-email/check', [AuthController::class, 'checkEmailVerified']);
