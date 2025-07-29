@@ -9,6 +9,7 @@ import Register from '../pages/Register';
 import MyTasks from '../pages/MyTasks';
 import Account from '../pages/Account';  // 👈 Thêm import cho trang tài khoản
 import VerifyEmailForm from '../components/auth/VerifyEmailForm';
+import InstagramPosts from '../pages/InstagramPosts';
 
 const router = createBrowserRouter([
   {
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
       {
         path: "my-task",
         element: <MyTasks />,
+      },
+      {
+        path: "instagram-posts",
+        element: <InstagramPosts />,
       },
       {
         path: "account",

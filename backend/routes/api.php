@@ -8,6 +8,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\InstagramPostController;
 
 
 // 🟢 Public routes (không cần đăng nhập)
@@ -68,6 +69,13 @@ Route::middleware('auth:sanctum')->group(function () {
     // 🧾 Admin: thêm user
     Route::post('/users', [AuthController::class, 'store']);
     Route::get('/users/all', [AuthController::class, 'index']);
+
+    // 📸 Instagram Posts Management
+    Route::get('/instagram-posts', [InstagramPostController::class, 'index']);
+    Route::post('/instagram-posts/crawl', [InstagramPostController::class, 'crawl']);
+    Route::get('/instagram-posts/{post}', [InstagramPostController::class, 'show']);
+    Route::put('/instagram-posts/{post}', [InstagramPostController::class, 'update']);
+    Route::delete('/instagram-posts/{post}', [InstagramPostController::class, 'destroy']);
 
     // // 🔐 Kiểm tra email đã xác minh (tuỳ backend bạn dùng thêm logic bên trong)
     // Route::get('/verify-email/check', [AuthController::class, 'checkEmailVerified']);
