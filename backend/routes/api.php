@@ -9,12 +9,18 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\InstagramPostController;
+use App\Http\Controllers\ShopeeProductController;
+use App\Http\Controllers\TestCrawlerController;
 
 
 // 🟢 Public routes (không cần đăng nhập)
 Route::get('/sanctum/csrf-cookie', fn () => response()->json(['csrf' => true]));
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
+// 🧪 Test routes (public for testing)
+Route::get('/test/instagram', [TestCrawlerController::class, 'testInstagram']);
+Route::post('/test/instagram', [TestCrawlerController::class, 'testInstagram']);
 
 // 📤 Gửi và xác minh mã email (public - trước khi có token)
 Route::post('/verify-email', [VerifyEmailController::class, 'verify']);
@@ -76,6 +82,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/instagram-posts/{post}', [InstagramPostController::class, 'show']);
     Route::put('/instagram-posts/{post}', [InstagramPostController::class, 'update']);
     Route::delete('/instagram-posts/{post}', [InstagramPostController::class, 'destroy']);
+
+    // 🛒 Shopee Products Management
+    Route::get('/shopee-products', [ShopeeProductController::class, 'index']);
+    Route::post('/shopee-products/crawl', [ShopeeProductController::class, 'crawl']);
+    Route::get('/shopee-products/{product}', [ShopeeProductController::class, 'show']);
+    Route::put('/shopee-products/{product}', [ShopeeProductController::class, 'update']);
+    Route::delete('/shopee-products/{product}', [ShopeeProductController::class, 'destroy']);
 
     // // 🔐 Kiểm tra email đã xác minh (tuỳ backend bạn dùng thêm logic bên trong)
     // Route::get('/verify-email/check', [AuthController::class, 'checkEmailVerified']);

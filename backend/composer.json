@@ -80,7 +80,8 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
-        }
+        },
+        "disable-tls": true
     },
     "minimum-stability": "stable",
     "prefer-stable": true

@@ -81,24 +81,13 @@ const Sidebar: React.FC = () => {
         </li>
         <li>
           <Link
-            to="/my-task"
+            to="/my-tasks"
             className={`flex items-center p-2 rounded hover:bg-base-300 transition ${
-              isActive('/my-task') ? 'bg-base-300 font-bold' : ''
+              isActive('/my-tasks') ? 'bg-base-300 font-bold' : ''
             }`}
           >
             <AiOutlinePushpin className="mr-2" />
             Công việc của tôi
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/instagram-posts"
-            className={`flex items-center p-2 rounded hover:bg-base-300 transition ${
-              isActive('/instagram-posts') ? 'bg-base-300 font-bold' : ''
-            }`}
-          >
-            <FaInstagram className="mr-2" />
-            Instagram Posts
           </Link>
         </li>
         <li>
