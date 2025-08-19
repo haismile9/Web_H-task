@@ -19,10 +19,12 @@ return [
     'localhost',
     'localhost:5173',
     'localhost:5174',
+    'localhost:62202', // Flutter web debug port
     '127.0.0.1',
     '127.0.0.1:8000',
     '127.0.0.1:5173',
     '127.0.0.1:5174',
+    '127.0.0.1:62202', // Flutter web debug port
     '::1',
 ]))),
 

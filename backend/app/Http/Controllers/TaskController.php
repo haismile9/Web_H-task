@@ -239,6 +239,104 @@ class TaskController extends Controller
     return response()->json(['tasks' => $tasks]);
 }
 
+    /**
+     * Get today's tasks for mobile app
+     */
+    public function todayTasks(Request $request)
+    {
+        $user = $request->user();
+        $today = now()->startOfDay();
+        $tomorrow = now()->addDay()->startOfDay();
+        
+        $tasks = Task::whereHas('assignedUsers', function($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->where(function($query) use ($today, $tomorrow) {
+                // Tasks due today or created today
+                $query->whereBetween('deadline', [$today, $tomorrow])
+                      ->orWhereBetween('created_at', [$today, $tomorrow]);
+            })
+            ->with(['project:id,name', 'assignedUsers:id,name'])
+            ->orderBy('deadline', 'asc')
+            ->get()
+            ->map(function($task) {
+                return [
+                    'id' => $task->id,
+                    'title' => $task->title,
+                    'description' => $task->description,
+                    'status' => $task->status,
+                    'priority' => $task->priority ?? 'medium',
+                    'due_date' => $task->deadline,
+                    'created_at' => $task->created_at,
+                    'updated_at' => $task->updated_at,
+                    'assigned_user_id' => $user->id,
+                    'project_id' => $task->project_id,
+                    'project_name' => $task->project->name ?? 'Không rõ',
+                ];
+            });
+
+        return response()->json([
+            'success' => true,
+            'data' => $tasks,
+            'count' => $tasks->count(),
+            'message' => 'Today\'s tasks retrieved successfully'
+        ]);
+    }
+
+    /**
+     * Get task statistics for dashboard
+     */
+    public function statistics(Request $request)
+    {
+        $user = $request->user();
+        $today = now()->startOfDay();
+        
+        $allTasks = Task::whereHas('assignedUsers', function($query) use ($user) {
+            $query->where('user_id', $user->id);
+        });
+        
+        $stats = [
+            'total_tasks' => $allTasks->count(),
+            'pending_tasks' => $allTasks->where('status', 'pending')->count(),
+            'in_progress_tasks' => $allTasks->where('status', 'in_progress')->count(),
+            'completed_tasks' => $allTasks->where('status', 'done')->count(),
+            'today_tasks' => $allTasks->whereDate('deadline', $today)->count(),
+            'overdue_tasks' => $allTasks->where('deadline', '<', $today)
+                                     ->where('status', '!=', 'done')->count()
+        ];
+
+        return response()->json([
+            'success' => true,
+            'data' => $stats,
+            'message' => 'Task statistics retrieved successfully'
+        ]);
+    }
+
+    /**
+     * Update task status for mobile app
+     */
+    public function updateStatus(Request $request, $taskId)
+    {
+        $user = $request->user();
+        
+        $request->validate([
+            'status' => 'required|in:pending,in_progress,done'
+        ]);
+
+        $task = Task::whereHas('assignedUsers', function($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->findOrFail($taskId);
+
+        $task->update(['status' => $request->status]);
+
+        return response()->json([
+            'success' => true,
+            'data' => $task,
+            'message' => 'Task status updated successfully'
+        ]);
+    }
+
 
 
 }
