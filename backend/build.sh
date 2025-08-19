@@ -8,23 +8,26 @@ echo "🚀 Starting production build..."
 echo "📦 Installing dependencies..."
 composer install --no-dev --optimize-autoloader
 
-# Copy production environment
-echo "⚙️ Setting up environment..."
-cp .env.production .env
-
 # Generate application key if not set
 echo "🔑 Generating application key..."
 php artisan key:generate --force
+
+# Clear any cached config first
+echo "🧹 Clearing cache..."
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan cache:clear
 
 # Run database migrations
 echo "🗄️ Running database migrations..."
 php artisan migrate --force
 
-# Seed database with sample data
+# Seed database with sample data (optional)
 echo "🌱 Seeding database..."
-php artisan db:seed --force
+php artisan db:seed --force || echo "Seeding failed or not needed"
 
-# Clear and cache config
+# Cache config for production
 echo "⚡ Optimizing application..."
 php artisan config:cache
 php artisan route:cache
