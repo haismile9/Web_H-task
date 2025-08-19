@@ -8,6 +8,7 @@ import Login from '../pages/Login';
 import Register from '../pages/Register';
 import MyTasks from '../pages/MyTasks';
 import Account from '../pages/Account';  // 👈 Thêm import cho trang tài khoản
+import VerifyEmailForm from '../components/auth/VerifyEmailForm';
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <Register />,
+  },
+  {
+    path: "/verify-email",
+    element: <VerifyEmailForm />,
   },
   {
     path: "/",   // 👈 BaseLayout chứa sidebar + nội dung
@@ -35,7 +40,7 @@ const router = createBrowserRouter([
         element: <ProjectDetails />,
       },
       {
-        path: "my-tasks",
+        path: "my-task",
         element: <MyTasks />,
       },
       {

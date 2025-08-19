@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useProjects } from "../api/project/useProjects";
 import { accessControl } from "../api/utils/access";
+import API from "../api/axios";
 import BoardCard from "../components/BoardCard";
 import NewBoardCard from "../components/NewBoardCard";
 import CreateProjectModal from "../components/projects/CreateProjectModal";
@@ -39,19 +40,13 @@ const ProjectList = () => {
     if (!confirmed) return;
 
     try {
-      await fetch(`/api/projects/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Requested-With": "XMLHttpRequest", // ✅ Rất quan trọng để Laravel hiểu đây là request từ frontend
-          Accept: "application/json",
-        },
-        credentials: "include", // ✅ bắt buộc với Sanctum
-      });
+      await API.delete(`/projects/${id}`);
 
       // ✅ Xoá khỏi projectState (không reload)
       setProjectsState((prev) => prev.filter((p) => p.id !== id));
+      alert("Đã xoá dự án thành công!");
     } catch (err) {
+      console.error("Delete project error:", err);
       alert("Lỗi khi xoá dự án.");
     }
   };

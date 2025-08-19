@@ -8,7 +8,6 @@ import {
   AiOutlineSetting,
   AiOutlineFolder
 } from 'react-icons/ai';
-import { FaInstagram } from 'react-icons/fa';
 import API from '../api/axios';
 
 const Sidebar: React.FC = () => {
@@ -81,9 +80,9 @@ const Sidebar: React.FC = () => {
         </li>
         <li>
           <Link
-            to="/my-tasks"
+            to="/my-task"
             className={`flex items-center p-2 rounded hover:bg-base-300 transition ${
-              isActive('/my-tasks') ? 'bg-base-300 font-bold' : ''
+              isActive('/my-task') ? 'bg-base-300 font-bold' : ''
             }`}
           >
             <AiOutlinePushpin className="mr-2" />
