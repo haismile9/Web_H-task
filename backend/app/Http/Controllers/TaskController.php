@@ -10,32 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
-    /**
-     * Format task data with consistent date formatting
-     */
-    private function formatTaskData($task, $includeProject = false)
-    {
-        $data = [
-            'id' => $task->id,
-            'title' => $task->title,
-            'description' => $task->description,
-            'status' => $task->status,
-            'deadline' => $task->deadline?->format('Y-m-d'),
-            'created_at' => $task->created_at?->format('Y-m-d H:i:s'),
-            'updated_at' => $task->updated_at?->format('Y-m-d H:i:s'),
-            'assigned_users' => $task->assignedUsers,
-        ];
-
-        if ($includeProject && $task->project) {
-            $data['project'] = [
-                'id' => $task->project->id,
-                'name' => $task->project->name,
-            ];
-        }
-
-        return $data;
-    }
-
     public function index($projectId)
     {
         $user = Auth::user();
@@ -47,8 +21,7 @@ class TaskController extends Controller
 
         $tasks = Task::where('project_id', $projectId)
             ->with('assignedUsers:id,name,email')
-            ->get()
-            ->map(fn($task) => $this->formatTaskData($task));
+            ->get();
 
         return response()->json([
             'tasks' => $tasks,
@@ -74,7 +47,7 @@ class TaskController extends Controller
         'title' => 'required|string|max:255',
         'description' => 'nullable|string',
         'status' => 'nullable|in:pending,in_progress,done',
-        'deadline' => 'nullable|date|after_or_equal:today',
+        'deadline' => 'nullable|date',
         'assigned_user_emails' => 'nullable|array',
         'assigned_user_emails.*' => 'email|exists:users,email',
         'assigned_user_ids' => 'nullable|array',
@@ -126,7 +99,7 @@ class TaskController extends Controller
         $task->assignedUsers()->sync($assignedIds);
     }
 
-    return response()->json($this->formatTaskData($task->load('assignedUsers:id,name,email')), 201);
+    return response()->json($task->load('assignedUsers:id,name,email'), 201);
 }
 
 
@@ -139,7 +112,18 @@ class TaskController extends Controller
             return response()->json(['message' => 'Bạn không thuộc dự án này'], 403);
         }
 
-        return response()->json($this->formatTaskData($task, true));
+        return response()->json([
+            'id' => $task->id,
+            'title' => $task->title,
+            'description' => $task->description,
+            'status' => $task->status,
+            'deadline' => $task->deadline,
+            'assigned_users' => $task->assignedUsers,
+            'project' => [
+                'id' => $task->project->id,
+                'name' => $task->project->name,
+            ]
+        ]);
     }
 
     public function update(Request $request, $taskId)
@@ -157,7 +141,7 @@ class TaskController extends Controller
         'title' => 'nullable|string|max:255',
         'description' => 'nullable|string',
         'status' => 'nullable|in:pending,in_progress,done',
-        'deadline' => 'nullable|date|after_or_equal:today',
+        'deadline' => 'nullable|date',
         'assigned_user_emails' => 'nullable|array',
         'assigned_user_emails.*' => 'email|exists:users,email',
         'assigned_user_ids' => 'nullable|array',
@@ -205,7 +189,7 @@ class TaskController extends Controller
     }
 
     return response()->json(
-        $this->formatTaskData($task->load('assignedUsers:id,name,email'))
+        $task->load('assignedUsers:id,name,email')
     );
     
 }
@@ -242,18 +226,14 @@ class TaskController extends Controller
     public function myTasks(Request $request)
 {
     $tasks = $request->user()->tasksAssigned()
-        ->with(['project:id,name', 'assignedUsers:id,name,email']) // Load project và assigned users
+        ->with('project:id,name') // Load tên project
         ->get()
         ->map(fn($task) => [
             'id' => $task->id,
             'title' => $task->title,
             'description' => $task->description,
             'status' => $task->status,
-            'deadline' => $task->deadline?->format('Y-m-d'), // Format ngày chuẩn
-            'created_at' => $task->created_at?->format('Y-m-d H:i:s'),
-            'project_id' => $task->project->id ?? null, // 🎯 Critical for navigation
             'project_name' => $task->project->name ?? 'Không rõ',
-            'assignedUsers' => $task->assignedUsers,
         ]);
 
     return response()->json(['tasks' => $tasks]);

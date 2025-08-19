@@ -18,20 +18,6 @@ class Task extends Model
         'assigned_to',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'deadline' => 'date',
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-        ];
-    }
-
     // Quan hệ: Task thuộc về một project
     public function project()
     {

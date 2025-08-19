@@ -114,9 +114,9 @@ class ProjectController extends Controller
         return response()->json(['message' => 'Không có quyền xóa'], 403);
     }
 
-    $project->forceDelete(); // ✅ Xoá vĩnh viễn
+    $project->delete(); // ✅ Xoá thông thường (không cần forceDelete)
 
-    return response()->json(['message' => 'Đã xoá vĩnh viễn'], 200);
+    return response()->json(['message' => 'Đã xoá dự án thành công'], 200);
 }
     public function getMembers($id)
     {
