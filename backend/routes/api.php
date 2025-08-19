@@ -9,6 +9,15 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 
+// Health check endpoint for Render
+Route::get('/health', function () {
+    return response()->json([
+        'status' => 'healthy',
+        'timestamp' => now(),
+        'database' => 'connected'
+    ], 200);
+});
+
 
 // 🟢 Public routes (không cần đăng nhập)
 Route::get('/sanctum/csrf-cookie', fn () => response()->json(['csrf' => true]));
