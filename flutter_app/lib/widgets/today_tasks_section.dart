@@ -5,11 +5,13 @@ import '../models/task.dart';
 class TodayTasksSection extends StatelessWidget {
   final List<Task> tasks;
   final bool isLoading;
+  final Function(int taskId, String status)? onStatusUpdate;
 
   const TodayTasksSection({
     super.key,
     required this.tasks,
     required this.isLoading,
+    this.onStatusUpdate,
   });
 
   @override

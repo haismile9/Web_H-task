@@ -172,4 +172,163 @@ class ApiService {
       await clearToken();
     }
   }
+
+  // ========== NEW MOBILE API METHODS ==========
+
+  // 📋 Tasks API
+  Future<Map<String, dynamic>> getTodayTasks() async {
+    try {
+      final response = await _dio.get('/mobile/today-tasks');
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        throw ApiError.fromJson(errorData);
+      }
+      throw ApiError(message: 'Lỗi kết nối: ${e.message}');
+    }
+  }
+
+  Future<Map<String, dynamic>> getTaskStatistics() async {
+    try {
+      final response = await _dio.get('/mobile/task-statistics');
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        throw ApiError.fromJson(errorData);
+      }
+      throw ApiError(message: 'Lỗi kết nối: ${e.message}');
+    }
+  }
+
+  Future<Map<String, dynamic>> updateTaskStatus(int taskId, String status) async {
+    try {
+      final response = await _dio.put('/mobile/tasks/$taskId/status', data: {
+        'status': status,
+      });
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        throw ApiError.fromJson(errorData);
+      }
+      throw ApiError(message: 'Lỗi kết nối: ${e.message}');
+    }
+  }
+
+  // 📅 Meetings API
+  Future<Map<String, dynamic>> getTodayMeetings() async {
+    try {
+      final response = await _dio.get('/mobile/today-meetings');
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        throw ApiError.fromJson(errorData);
+      }
+      throw ApiError(message: 'Lỗi kết nối: ${e.message}');
+    }
+  }
+
+  Future<Map<String, dynamic>> getMeetingStatistics() async {
+    try {
+      final response = await _dio.get('/mobile/meeting-statistics');
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        throw ApiError.fromJson(errorData);
+      }
+      throw ApiError(message: 'Lỗi kết nối: ${e.message}');
+    }
+  }
+
+  Future<Map<String, dynamic>> updateMeetingStatus(int meetingId, String status) async {
+    try {
+      final response = await _dio.put('/mobile/meetings/$meetingId/status', data: {
+        'status': status,
+      });
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        throw ApiError.fromJson(errorData);
+      }
+      throw ApiError(message: 'Lỗi kết nối: ${e.message}');
+    }
+  }
+
+  // 📝 Create Meeting
+  Future<Map<String, dynamic>> createMeeting({
+    required String title,
+    required String description,
+    required DateTime startTime,
+    required DateTime endTime,
+    String? location,
+    String type = 'offline',
+    List<int>? participantIds,
+  }) async {
+    try {
+      final response = await _dio.post('/meetings', data: {
+        'title': title,
+        'description': description,
+        'start_time': startTime.toIso8601String(),
+        'end_time': endTime.toIso8601String(),
+        'location': location,
+        'type': type,
+        'participant_ids': participantIds,
+      });
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        throw ApiError.fromJson(errorData);
+      }
+      throw ApiError(message: 'Lỗi kết nối: ${e.message}');
+    }
+  }
+
+  // 📋 Create Task
+  Future<Map<String, dynamic>> createTask({
+    required int projectId,
+    required String title,
+    required String description,
+    String status = 'pending',
+    String priority = 'medium',
+    DateTime? deadline,
+    List<int>? assignedUserIds,
+  }) async {
+    try {
+      final response = await _dio.post('/projects/$projectId/tasks', data: {
+        'title': title,
+        'description': description,
+        'status': status,
+        'priority': priority,
+        'deadline': deadline?.toIso8601String(),
+        'assigned_user_ids': assignedUserIds,
+      });
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        throw ApiError.fromJson(errorData);
+      }
+      throw ApiError(message: 'Lỗi kết nối: ${e.message}');
+    }
+  }
+
+  // 📦 Get Projects
+  Future<Map<String, dynamic>> getProjects() async {
+    try {
+      final response = await _dio.get('/projects');
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        final errorData = e.response!.data;
+        throw ApiError.fromJson(errorData);
+      }
+      throw ApiError(message: 'Lỗi kết nối: ${e.message}');
+    }
+  }
 }

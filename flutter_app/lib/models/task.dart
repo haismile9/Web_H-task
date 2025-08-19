@@ -55,6 +55,32 @@ class Task {
     };
   }
 
+  Task copyWith({
+    int? id,
+    String? title,
+    String? description,
+    String? status,
+    String? priority,
+    DateTime? dueDate,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    int? assignedUserId,
+    int? projectId,
+  }) {
+    return Task(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      status: status ?? this.status,
+      priority: priority ?? this.priority,
+      dueDate: dueDate ?? this.dueDate,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      assignedUserId: assignedUserId ?? this.assignedUserId,
+      projectId: projectId ?? this.projectId,
+    );
+  }
+
   bool get isOverdue {
     if (dueDate == null) return false;
     return DateTime.now().isAfter(dueDate!) && status != 'completed';

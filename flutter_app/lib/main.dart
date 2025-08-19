@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'services/api_service.dart';
 import 'blocs/auth_bloc.dart';
+import 'store/home_cubit.dart';
 import 'screens/sign_in_wrapper_screen.dart';
 import 'screens/new_home_screen.dart';
+import 'screens/debug_api_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,9 +17,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AuthBloc(apiService: ApiService())
-        ..add(AuthCheckStatus()),
+    final apiService = ApiService();
+    
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => AuthBloc(apiService: apiService)
+            ..add(AuthCheckStatus()),
+        ),
+        BlocProvider(
+          create: (context) => HomeCubit(apiService: apiService),
+        ),
+      ],
       child: MaterialApp(
         title: 'Task Manager',
         debugShowCheckedModeBanner: false,
@@ -33,6 +44,7 @@ class MyApp extends StatelessWidget {
           '/': (context) => const SplashScreen(),
           '/sign-in': (context) => const SignInWrapperScreen(),
           '/home': (context) => const NewHomeScreen(),
+          '/debug': (context) => const DebugApiScreen(),
         },
       ),
     );

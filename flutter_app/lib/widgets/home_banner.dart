@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/user.dart';
+import '../store/home_cubit.dart';
 
 class HomeBanner extends StatelessWidget {
   final User user;
+  final TaskStatistics? taskStatistics;
+  final MeetingStatistics? meetingStatistics;
 
   const HomeBanner({
     super.key,
     required this.user,
+    this.taskStatistics,
+    this.meetingStatistics,
   });
 
   @override

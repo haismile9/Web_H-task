@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/auth_bloc.dart';
+import '../store/home_cubit.dart';
 import '../models/user.dart';
-import '../models/task.dart';
-import '../models/meeting.dart';
 import '../widgets/home_banner.dart';
 import '../widgets/today_tasks_section.dart';
 import '../widgets/today_meetings_section.dart';
@@ -17,28 +16,11 @@ class NewHomeScreen extends StatefulWidget {
 }
 
 class _NewHomeScreenState extends State<NewHomeScreen> {
-  List<Task> todayTasks = [];
-  List<Meeting> todayMeetings = [];
-  bool isLoadingTasks = true;
-  bool isLoadingMeetings = true;
-
   @override
   void initState() {
     super.initState();
-    _loadData();
-  }
-
-  void _loadData() {
-    // Simulate loading data
-    Future.delayed(const Duration(seconds: 1), () {
-      setState(() {
-        // For demo - empty state
-        todayTasks = [];
-        todayMeetings = [];
-        isLoadingTasks = false;
-        isLoadingMeetings = false;
-      });
-    });
+    // Tạm thời comment out để tránh lỗi API
+    // context.read<HomeCubit>().loadHomeData();
   }
 
   @override
@@ -46,9 +28,31 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F3F8),
       body: BlocBuilder<AuthBloc, AuthState>(
-        builder: (context, state) {
-          if (state is AuthSuccess) {
-            return _buildHomeContent(state.user);
+        builder: (context, authState) {
+          if (authState is AuthSuccess) {
+            return BlocConsumer<HomeCubit, HomeState>(
+              listener: (context, homeState) {
+                // Show error message if any
+                if (homeState.status == HomeStatus.failure && homeState.errorMessage != null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(homeState.errorMessage!),
+                      backgroundColor: Colors.red,
+                      action: SnackBarAction(
+                        label: 'Thử lại',
+                        textColor: Colors.white,
+                        onPressed: () {
+                          context.read<HomeCubit>().loadHomeData();
+                        },
+                      ),
+                    ),
+                  );
+                }
+              },
+              builder: (context, homeState) {
+                return _buildHomeContent(authState.user, homeState);
+              },
+            );
           }
           return const Center(
             child: CircularProgressIndicator(),
@@ -58,43 +62,57 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
     );
   }
 
-  Widget _buildHomeContent(User user) {
-    return Column(
-      children: [
-        // Navigation Header
-        const AppNavigationBar(),
-        
-        // Scrollable Content
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(12, 0, 12, 20),
-            child: Column(
-              children: [
-                const SizedBox(height: 16),
-                
-                // Work Summary Banner
-                HomeBanner(user: user),
-                
-                const SizedBox(height: 16),
-                
-                // Today Meetings Section
-                TodayMeetingsSection(
-                  meetings: todayMeetings,
-                  isLoading: isLoadingMeetings,
-                ),
-                
-                const SizedBox(height: 16),
-                
-                // Today Tasks Section
-                TodayTasksSection(
-                  tasks: todayTasks,
-                  isLoading: isLoadingTasks,
-                ),
-              ],
+  Widget _buildHomeContent(User user, HomeState homeState) {
+    return RefreshIndicator(
+      onRefresh: () => context.read<HomeCubit>().refreshTodayData(),
+      child: Column(
+        children: [
+          // Navigation Header
+          const AppNavigationBar(),
+          
+          // Scrollable Content
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(12, 0, 12, 20),
+              child: Column(
+                children: [
+                  const SizedBox(height: 16),
+                  
+                  // Work Summary Banner
+                  HomeBanner(
+                    user: user,
+                    taskStatistics: homeState.taskStatistics,
+                    meetingStatistics: homeState.meetingStatistics,
+                  ),
+                  
+                  const SizedBox(height: 16),
+                  
+                  // Today Meetings Section
+                  TodayMeetingsSection(
+                    meetings: homeState.todayMeetings,
+                    isLoading: homeState.isLoading,
+                    onStatusUpdate: (meetingId, status) {
+                      context.read<HomeCubit>().updateMeetingStatus(meetingId, status);
+                    },
+                  ),
+                  
+                  const SizedBox(height: 16),
+                  
+                  // Today Tasks Section
+                  TodayTasksSection(
+                    tasks: homeState.todayTasks,
+                    isLoading: homeState.isLoading,
+                    onStatusUpdate: (taskId, status) {
+                      context.read<HomeCubit>().updateTaskStatus(taskId, status);
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

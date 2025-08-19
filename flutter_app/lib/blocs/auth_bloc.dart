@@ -163,6 +163,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthCheckStatus event,
     Emitter<AuthState> emit,
   ) async {
+    // Tạm thời mock user để test UI
+    final mockUser = User(
+      id: 1,
+      name: 'Nguyen Van A',
+      email: 'test@example.com',
+      position: 'Junior Full Stack Developer',
+      avatar: null,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+    
+    emit(AuthSuccess(user: mockUser, token: 'mock_token'));
+    return;
+    
+    // Code login thực (comment tạm thời)
+    /*
     final token = await _apiService.getToken();
     if (token != null) {
       try {
@@ -175,5 +191,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } else {
       emit(AuthInitial());
     }
+    */
   }
 }

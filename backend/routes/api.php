@@ -7,6 +7,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 
 
@@ -37,6 +38,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/tasks/{id}', [TaskController::class, 'update']);
     Route::delete('/tasks/{id}', [TaskController::class, 'destroy']);
     Route::get('/my-tasks', [TaskController::class, 'myTasks']);
+    
+    // 📱 Mobile API endpoints
+    Route::get('/mobile/today-tasks', [TaskController::class, 'todayTasks']);
+    Route::get('/mobile/task-statistics', [TaskController::class, 'statistics']);
+    Route::put('/mobile/tasks/{id}/status', [TaskController::class, 'updateStatus']);
+
+    // 📅 Meeting routes
+    Route::apiResource('meetings', MeetingController::class);
+    Route::get('/mobile/today-meetings', [MeetingController::class, 'todayMeetings']);
+    Route::get('/mobile/meeting-statistics', [MeetingController::class, 'statistics']);
+    Route::put('/mobile/meetings/{id}/status', [MeetingController::class, 'updateStatus']);
 
     // 📦 Comment
     Route::get('/tasks/{taskId}/comments', [CommentController::class, 'index']);

@@ -5,11 +5,13 @@ import '../models/meeting.dart';
 class TodayMeetingsSection extends StatelessWidget {
   final List<Meeting> meetings;
   final bool isLoading;
+  final Function(int meetingId, String status)? onStatusUpdate;
 
   const TodayMeetingsSection({
     super.key,
     required this.meetings,
     required this.isLoading,
+    this.onStatusUpdate,
   });
 
   @override

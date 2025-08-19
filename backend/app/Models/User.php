@@ -66,6 +66,23 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Comment::class);
     }
 
+    /**
+     * Meetings this user participates in
+     */
+    public function meetings()
+    {
+        return $this->belongsToMany(Meeting::class, 'meeting_participants')
+                    ->withTimestamps();
+    }
+
+    /**
+     * Meetings created by this user
+     */
+    public function createdMeetings()
+    {
+        return $this->hasMany(Meeting::class, 'created_by');
+    }
+
     
 
 }

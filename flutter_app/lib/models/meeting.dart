@@ -59,6 +59,34 @@ class Meeting {
     };
   }
 
+  Meeting copyWith({
+    int? id,
+    String? title,
+    String? description,
+    DateTime? startTime,
+    DateTime? endTime,
+    String? location,
+    String? type,
+    String? status,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    List<int>? participantIds,
+  }) {
+    return Meeting(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      location: location ?? this.location,
+      type: type ?? this.type,
+      status: status ?? this.status,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      participantIds: participantIds ?? this.participantIds,
+    );
+  }
+
   bool get isToday {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
