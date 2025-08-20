@@ -9,10 +9,12 @@ import {
   AiOutlineFolder
 } from 'react-icons/ai';
 import API from '../api/axios';
+import { useAuth } from '../hooks/useAuth';
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const handleLogout = async () => {
     try {
@@ -20,8 +22,7 @@ const Sidebar: React.FC = () => {
     } catch (error) {
       console.error('Logout failed', error);
     } finally {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      logout(); // Sử dụng AuthContext logout
       navigate('/login');
     }
   };
@@ -29,8 +30,8 @@ const Sidebar: React.FC = () => {
   const isActive = (path: string) =>
     location.pathname === path || location.pathname.startsWith(path + '/');
 
-  const rawUser = localStorage.getItem('user');
-  const user = rawUser ? JSON.parse(rawUser) : { name: 'Guest', role: 'guest' };
+  // Tạm thời dùng user giả, sau này có thể lấy từ AuthContext
+  const user = { name: 'User', role: 'member' };
   const firstLetter = user.name?.charAt(0)?.toUpperCase() || 'U';
 
   return (

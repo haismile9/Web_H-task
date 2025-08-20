@@ -1,3 +1,71 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom input styling for better text contrast */
+@layer components {
+  .input {
+    @apply text-gray-900;
+  }
+  
+  .input::placeholder {
+    @apply text-gray-500;
+  }
+  
+  .input:focus {
+    @apply text-gray-900 bg-white;
+  }
+  
+  /* Ensure DaisyUI doesn't override our text colors */
+  .input[data-theme] {
+    @apply text-gray-900;
+  }
+  
+  /* Better button contrast for auth pages */
+  .btn-primary-auth {
+    @apply bg-blue-600 border-blue-600 text-white font-semibold;
+  }
+  
+  .btn-primary-auth:hover {
+    @apply bg-blue-700 border-blue-700;
+  }
+  
+  .btn-secondary-auth {
+    @apply bg-white/10 border border-white/30 text-white font-medium;
+  }
+  
+  .btn-secondary-auth:hover {
+    @apply bg-white/20 border-white/50;
+  }
+  
+  .btn-link-auth {
+    @apply text-blue-200 no-underline font-medium;
+  }
+  
+  .btn-link-auth:hover {
+    @apply text-white underline;
+  }
+}
+
+/* Custom animations for 404 page */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Override default pulse to be slower */
+.animate-pulse-slow {
+  animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

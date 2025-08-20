@@ -20,6 +20,11 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/verify-email', [VerifyEmailController::class, 'verify']);
 Route::post('/resend-code', [VerifyEmailController::class, 'resend']);
 
+// 🔐 Password reset routes (public)
+Route::post('/password/reset/send-code', [AuthController::class, 'sendPasswordResetCode']);
+Route::post('/password/reset/verify-code', [AuthController::class, 'verifyPasswordResetCode']);
+Route::post('/password/reset', [AuthController::class, 'resetPassword']);
+
 // 🟡 Routes yêu cầu đăng nhập
 Route::middleware('auth:sanctum')->group(function () {
     // 🔐 Logout

@@ -5,15 +5,17 @@ import API from "../api/axios";
 import BoardCard from "../components/BoardCard";
 import NewBoardCard from "../components/NewBoardCard";
 import CreateProjectModal from "../components/projects/CreateProjectModal";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 const ProjectList = () => {
   const rawUser = localStorage.getItem("user");
   const user = rawUser ? JSON.parse(rawUser) : null;
+  const location = useLocation();
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const [projectsState, setProjectsState] = useState<any[]>([]); // ← danh sách project cục bộ
+  const [notification, setNotification] = useState<string>("");
 
   const { projects, loading, error } = useProjects();
 
@@ -23,6 +25,20 @@ const ProjectList = () => {
       setProjectsState(projects);
     }
   }, [projects]);
+
+  // Handle notification message from navigation state
+  useEffect(() => {
+    if (location.state?.message) {
+      setNotification(location.state.message);
+      // Clear the notification after 5 seconds
+      setTimeout(() => {
+        setNotification("");
+      }, 5000);
+      
+      // Clear the state to prevent showing the message again on refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   if (!user) return <Navigate to="/" />;
 
@@ -60,6 +76,15 @@ const ProjectList = () => {
 
   return (
     <div className="p-6 bg-base-200 min-h-screen">
+      {/* Notification Toast */}
+      {notification && (
+        <div className="toast toast-top toast-center">
+          <div className="alert alert-warning">
+            <span>{notification}</span>
+          </div>
+        </div>
+      )}
+      
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold">Xin chào, {user.name}</h1>

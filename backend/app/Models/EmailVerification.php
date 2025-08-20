@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class EmailVerification extends Model
 {
-    protected $fillable = ['email', 'code', 'expires_at'];
+    protected $fillable = ['email', 'name', 'password', 'code', 'type', 'expires_at'];
     public $timestamps = true;
 
     protected $casts = [

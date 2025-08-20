@@ -1,16 +1,19 @@
 import { createBrowserRouter } from 'react-router-dom';
 import BaseLayout from '../layout/BaseLayout';
-import Dashboard from '../pages/Dashboard'; // Trang thống kê
-import ProjectList from '../pages/ProjectList'; // Danh sách dự án
+import Dashboard from '../pages/Dashboard';
+import ProjectList from '../pages/ProjectList';
 import ProjectDetails from '../pages/ProjectDetails';
 import NotFound from '../pages/NotFound';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
 import MyTasks from '../pages/MyTasks';
-import Account from '../pages/Account';  // 👈 Thêm import cho trang tài khoản
+import Account from '../pages/Account';
 import VerifyEmailForm from '../components/auth/VerifyEmailForm';
+import ForgotPassword from '../pages/ForgotPassword';
+import ProtectedRoute from '../components/ProtectedRoute';
 
 const router = createBrowserRouter([
+  // Public routes (không cần đăng nhập)
   {
     path: "/login",
     element: <Login />,
@@ -24,19 +27,36 @@ const router = createBrowserRouter([
     element: <VerifyEmailForm />,
   },
   {
-    path: "/",   // 👈 BaseLayout chứa sidebar + nội dung
-    element: <BaseLayout />,
+    path: "/forgot-password",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/404",
+    element: <NotFound />,
+  },
+  // Protected routes (cần đăng nhập)
+  {
+    path: "/",
+    element: (
+      <ProtectedRoute>
+        <BaseLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
-        path: "dashboard",        // Trang thống kê
+        index: true, // Redirect / to dashboard
         element: <Dashboard />,
       },
       {
-        path: "projects",         // Danh sách dự án
+        path: "dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "projects",
         element: <ProjectList />,
       },
       {
-        path: "projects/:id",     // Chi tiết dự án
+        path: "projects/:id",
         element: <ProjectDetails />,
       },
       {

@@ -75,19 +75,30 @@ class ProjectController extends Controller
         }
     }
 
-    public function show($id)
-{
-    $project = Project::with('users')->findOrFail($id);
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        $project = Project::with(['manager', 'members'])->find($id);
 
-    return response()->json([
-        'id' => $project->id,
-        'name' => $project->name,
-        'description' => $project->description,
-        'background_url' => $project->background_url, // ✅
-        'owner_id' => $project->owner_id, // ✅ fix visibility
-        'users' => $project->users
-    ]);
-}
+        if (!$project) {
+            return response()->json(['error' => 'Project not found'], 404);
+        }
+
+        $user = auth()->user();
+        
+        // Check if user has access to this project
+        $hasAccess = $project->manager_id == $user->id || 
+                    $project->members->contains('id', $user->id);
+
+        if (!$hasAccess) {
+            // Return 404 instead of 403 to hide the existence of the project
+            return response()->json(['error' => 'Project not found'], 404);
+        }
+
+        return response()->json($project);
+    }
 
 
     public function update(Request $request, $id)
