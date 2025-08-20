@@ -168,10 +168,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       id: 1,
       name: 'Nguyen Van A',
       email: 'test@example.com',
-      position: 'Junior Full Stack Developer',
-      avatar: null,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
+      role: 'developer',
+      createdAt: DateTime.now().toIso8601String(),
+      updatedAt: DateTime.now().toIso8601String(),
     );
     
     emit(AuthSuccess(user: mockUser, token: 'mock_token'));
