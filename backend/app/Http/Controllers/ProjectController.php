@@ -80,7 +80,7 @@ class ProjectController extends Controller
      */
     public function show(string $id)
     {
-        $project = Project::with(['manager', 'members'])->find($id);
+        $project = Project::with(['owner', 'users'])->find($id);
 
         if (!$project) {
             return response()->json(['error' => 'Project not found'], 404);
@@ -88,9 +88,9 @@ class ProjectController extends Controller
 
         $user = auth()->user();
         
-        // Check if user has access to this project
-        $hasAccess = $project->manager_id == $user->id || 
-                    $project->members->contains('id', $user->id);
+        // Check if user has access to this project (owner or member)
+        $hasAccess = $project->owner_id == $user->id || 
+                    $project->users->contains('id', $user->id);
 
         if (!$hasAccess) {
             // Return 404 instead of 403 to hide the existence of the project
